@@ -1,0 +1,42 @@
+
+
+POST http://localhost:3001/login/
+Content-Type: application/json
+
+{
+    "username" : "tejapamuru",
+    "password" : "tejapamuru4111"
+}
+
+
+###
+
+POST http://localhost:3001/register/
+Content-Type: application/json
+
+{
+    "id" : 1,
+    "firstname" : "Teja",
+    "lastname" : "Pamuru",
+    "username" : "tejapamuru",
+    "password" : "tejapamuru4111",
+    "gender" : "Male"
+}
+
+
+
+###
+
+
+POST http://localhost:3001/
+Content-Type: application/json
+
+{
+    "f_id" : "2",
+    "ans" : "Iam from Bengaluru."
+}
+
+###
+
+
+GET http://localhost:3001/
