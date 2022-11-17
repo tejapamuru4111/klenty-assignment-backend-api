@@ -114,36 +114,38 @@ app.post("/login/", async (request, response) => {
   }
 });
 
-app.get("/", async (request, response) => {
+app.get("/", authenticateToken, async (request, response) => {
   const { search = "" } = request.query;
   const getFaqsQuery = `
     SELECT
       *
     FROM
       faqs
-    WHERE question LIKE '%${search}%';`;
+    WHERE question LIKE '%${search}%'
+    ORDER BY posted_date DESC;`;
   const getAnswersQuery = `
     SELECT
       *
     FROM
-      faqs_ans;`;
+      faqs_ans
+    ORDER BY posted_date ASC;`;
   const faqsArray = await database.all(getFaqsQuery);
   const answersArray = await database.all(getAnswersQuery);
   response.send(convertUsableObject(faqsArray, answersArray));
 });
 
-app.post("/", async (request, response) => {
+app.post("/", authenticateToken, async (request, response) => {
   const { f_id, que, ans } = request.body;
   const uuid = uuidv4();
   const date = new Date();
-  const presentDate = format(date, "yyyy-MM-d-H-m-s");
+  const presentDate = format(date, "yyyy-MM-d H:m:s");
 
   if (que !== undefined) {
     const postFaqQuery = `
   INSERT INTO
     faqs 
   VALUES
-    (${f_id}, '${que}', ${presentDate});`;
+    (${f_id}, '${que}', '${presentDate}');`;
     await database.run(postFaqQuery);
   }
 
@@ -151,9 +153,9 @@ app.post("/", async (request, response) => {
   INSERT INTO
     faqs_ans
   VALUES
-    ('${uuid}', '${ans}', ${f_id}, ${presentDate});`;
+    ('${uuid}', '${ans}', ${f_id}, '${presentDate}');`;
   await database.run(postAnswerQuery);
-  response.send("Faq Successfully Added");
+  response.send("Successfully Added");
 });
 
 module.exports = app;
